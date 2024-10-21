@@ -51,3 +51,11 @@ app.get("/sayHi", (req, res) => {
 
   res.send(`<h1>Hello! ${body.name}</h1>`);
 });
+
+app.get("/q", (req, res) => {
+  res.json({
+    name: req.query.name,
+    age: req.query.age,
+    language: req.query.language,
+  });
+});

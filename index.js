@@ -59,3 +59,7 @@ app.get("/q", (req, res) => {
     language: req.query.language,
   });
 });
+
+app.get("/numbers", (req, res) => {
+  res.sendFile(__dirname + "/numbers.html");
+});

@@ -59,3 +59,8 @@ app.get("/q", (req, res) => {
     language: req.query.language,
   });
 });
+
+app.get("/home", (req, res) => {
+  res.send("weldome home man!");
+});
+

@@ -61,5 +61,9 @@ app.get("/q", (req, res) => {
 });
 
 app.get("/numbers", (req, res) => {
-  res.sendFile(__dirname + "/numbers.html");
+  let num1 = Number(req.query.num1);
+  let num2 = Number(req.query.num2);
+  res.render("numbers.ejs", {
+    numbers: num1 + num2,
+  });
 });

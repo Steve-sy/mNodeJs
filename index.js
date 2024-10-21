@@ -67,3 +67,9 @@ app.get("/numbers", (req, res) => {
     numbers: num1 + num2,
   });
 });
+
+app.get("/home", (req, res) => {
+  res.send("weldome home man!");
+});
+
+

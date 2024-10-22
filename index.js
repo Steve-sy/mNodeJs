@@ -1,8 +1,23 @@
+require("dotenv").config();
+
 // express js inilatizing the app
 
 const express = require("express");
 const app = express();
 const port = 3000;
+
+// connecting to the database
+const mongoose = require("mongoose");
+const db = mongoose
+  .connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_NAME}`,
+  )
+  .then(() => {
+    console.log("Connected to the database 💪");
+  })
+  .catch((err) => {
+    console.error("Error connecting to the database:", err);
+  });
 
 // using the json middleware
 app.use(express.json());
@@ -71,5 +86,3 @@ app.get("/numbers", (req, res) => {
 app.get("/home", (req, res) => {
   res.send("weldome home man!");
 });
-
-

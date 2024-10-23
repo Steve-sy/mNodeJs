@@ -1,8 +1,25 @@
+require("dotenv").config();
+
 // express js inilatizing the app
 
 const express = require("express");
 const app = express();
 const port = 3000;
+
+const Article = require("./models/Article");
+
+// connecting to the database
+const mongoose = require("mongoose");
+const db = mongoose
+  .connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_NAME}`,
+  )
+  .then(() => {
+    console.log("\x1b[32mConnected to the database 💪\x1b[0m");
+  })
+  .catch((err) => {
+    console.error("\x1b[31mError connecting to the database:\x1b[0m", err);
+  });
 
 // using the json middleware
 app.use(express.json());
@@ -72,4 +89,38 @@ app.get("/home", (req, res) => {
   res.send("weldome home man!");
 });
 
+/// ===== Articles Endpoint =====
+app.post("/articles", async (req, res) => {
+  const newArticle = new Article();
+  newArticle.title = req.body.title;
+  newArticle.body = req.body.body;
+  newArticle.numbersOfLikes = req.body.numbersOfLikes;
+  await newArticle.save();
+  // res.send(
+  //   `New Article created successfully! with the title: ${newArticle.title}`,
+  // );
+  res.json(newArticle);
+});
 
+app.get("/articles", async (req, res) => {
+  const articles = await Article.find().sort({ createdAt: -1 });
+  res.render("articles.ejs", {
+    articles: articles,
+  });
+});
+
+app.get("/articles/:articleId", async (req, res) => {
+  const articles = await Article.findById(req.params.articleId);
+  res.send(articles);
+});
+
+app.get("/articles/d/:articleId", async (req, res) => {
+  try {
+    const articles = await Article.findByIdAndDelete(req.params.articleId);
+    res.send("<h1>Article deleted successfully!</h1>");
+    return;
+  } catch (error) {
+    console.log(error);
+    return res.send("<h1>Article not found!</h1>");
+  }
+});
